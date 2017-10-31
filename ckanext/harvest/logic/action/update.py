@@ -444,9 +444,15 @@ def harvest_objects_import(context, data_dict):
     return last_objects_count
 
 
-def _calculate_next_run(frequency):
+def _calculate_next_run(frequency, time):
 
     now = datetime.datetime.utcnow()
+    if time and frequency != 'ALWAYS':
+        t = datetime.datetime.strptime(time, '%I:%M %p')
+        set_hour = int(t.strftime("%H"))
+        set_minute = int(t.strftime("%M"))
+        now = now.replace(hour=set_hour, minute=set_minute, second=0, microsecond=0)
+
     if frequency == 'ALWAYS':
         return now
     if frequency == 'WEEKLY':
@@ -482,7 +488,7 @@ def _make_scheduled_jobs(context, data_dict):
         except HarvestJobExists:
             log.info('Trying to rerun job for %s skipping', source.id)
 
-        source.next_run = _calculate_next_run(source.frequency)
+        source.next_run = _calculate_next_run(source.frequency, source.time)
         source.save()
 
 

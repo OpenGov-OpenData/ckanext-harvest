@@ -22,6 +22,7 @@ from ckan.model.package import Package
 from ckan.lib.munge import munge_title_to_name
 
 UPDATE_FREQUENCIES = ['MANUAL','MONTHLY','WEEKLY','BIWEEKLY','DAILY', 'ALWAYS']
+UPDATE_TIMES = [datetime.time(i).strftime('%I:%M %p') for i in range(24)]
 
 log = logging.getLogger(__name__)
 
@@ -253,6 +254,7 @@ def define_harvester_tables():
         Column('user_id', types.UnicodeText, default=u''),
         Column('publisher_id', types.UnicodeText, default=u''),
         Column('frequency', types.UnicodeText, default=u'MANUAL'),
+        Column('time', types.UnicodeText, default=u''),
         Column('next_run', types.DateTime),
     )
     # Was harvesting_job
