@@ -81,6 +81,9 @@ def setup():
         if not 'frequency' in column_names:
             log.debug('Harvest tables need to be updated')
             migrate_v3()
+        if not 'time' in column_names:
+            log.debug('Harvest tables need to be updated')
+            migrate_v4()
 
         # Check if this instance has harvest source datasets
         source_ids = Session.query(HarvestSource.id).filter_by(active=True).all()
@@ -502,6 +505,20 @@ ALTER TABLE harvest_object_error
     conn.execute(statement)
     Session.commit()
     log.info('Harvest tables migrated to v3')
+
+
+def migrate_v4():
+    log.debug('Migrating harvest tables to v4. This may take a while...')
+    conn = Session.connection()
+
+    statement =  """
+ALTER TABLE harvest_source
+	ADD COLUMN time text;
+    """
+    conn.execute(statement)
+    Session.commit()
+    log.info('Harvest tables migrated to v4')
+
 
 class PackageIdHarvestSourceIdMismatch(Exception):
     """
