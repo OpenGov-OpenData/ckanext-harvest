@@ -512,8 +512,8 @@ def migrate_v4():
     conn = Session.connection()
 
     statement =  """
-ALTER TABLE harvest_source
-	ADD COLUMN time text;
+    ALTER TABLE harvest_source
+    ADD COLUMN time text;
     """
     conn.execute(statement)
     Session.commit()

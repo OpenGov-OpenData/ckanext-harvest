@@ -89,12 +89,10 @@ def harvest_frequencies():
             for f in UPDATE_FREQUENCIES]
 
 def harvest_times():
-
     return [{'text': p.toolkit._(f), 'value': f}
             for f in UPDATE_TIMES]
 
 def harvest_default_time():
-
     default_time = datetime.datetime.now().strftime('%I:00 %p')
     return default_time
 

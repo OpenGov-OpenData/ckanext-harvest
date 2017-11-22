@@ -450,8 +450,7 @@ def _calculate_next_run(frequency, time):
     if time and frequency != 'ALWAYS':
         t = datetime.datetime.strptime(time, '%I:%M %p')
         set_hour = int(t.strftime("%H"))
-        set_minute = int(t.strftime("%M"))
-        now = now.replace(hour=set_hour, minute=set_minute, second=0, microsecond=0)
+        now = now.replace(hour=set_hour, minute=0, second=0, microsecond=0)
 
     if frequency == 'ALWAYS':
         return now
