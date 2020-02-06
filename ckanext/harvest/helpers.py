@@ -1,10 +1,12 @@
 
+import datetime
+
 from ckan import logic
 from ckan import model
 import ckan.lib.helpers as h
 import ckan.plugins as p
 
-from ckanext.harvest.model import UPDATE_FREQUENCIES
+from ckanext.harvest.model import UPDATE_FREQUENCIES, UPDATE_TIMES
 from ckanext.harvest.plugin import DATASET_TYPE_NAME
 from ckanext.harvest.interfaces import IHarvester
 
@@ -107,6 +109,16 @@ def harvest_frequencies():
 
     return [{'text': p.toolkit._(f.title()), 'value': f}
             for f in UPDATE_FREQUENCIES]
+
+
+def harvest_times():
+    return [{'text': p.toolkit._(f), 'value': f}
+            for f in UPDATE_TIMES]
+
+
+def harvest_default_time():
+    default_time = datetime.datetime.now().strftime('%I:00 %p')
+    return default_time
 
 
 def link_for_harvest_object(id=None, guid=None, text=None):

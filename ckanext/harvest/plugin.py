@@ -310,6 +310,8 @@ class Harvest(p.SingletonPlugin, DefaultDatasetForm, DefaultTranslation):
                 'harvesters_info': harvest_helpers.harvesters_info,
                 'harvester_types': harvest_helpers.harvester_types,
                 'harvest_frequencies': harvest_helpers.harvest_frequencies,
+                'harvest_times': harvest_helpers.harvest_times,
+                'harvest_default_time': harvest_helpers.harvest_default_time,
                 'link_for_harvest_object': harvest_helpers.link_for_harvest_object,
                 'harvest_source_extra_fields': harvest_helpers.harvest_source_extra_fields,
                 'bootstrap_version': harvest_helpers.bootstrap_version,
@@ -387,7 +389,7 @@ def _create_harvest_source_object(context, data_dict):
     source.type = data_dict['source_type']
 
     opt = ['active', 'title', 'description', 'user_id',
-           'publisher_id', 'config', 'frequency']
+           'publisher_id', 'config', 'frequency', 'time']
     for o in opt:
         if o in data_dict and data_dict[o] is not None:
             source.__setattr__(o, data_dict[o])
@@ -423,7 +425,7 @@ def _update_harvest_source_object(context, data_dict):
         raise logic.NotFound('Harvest source %s does not exist' % source_id)
 
     fields = ['url', 'title', 'description', 'user_id',
-              'publisher_id', 'frequency']
+              'publisher_id', 'frequency', 'time']
     for f in fields:
         if f in data_dict and data_dict[f] is not None:
             if f == 'url':
