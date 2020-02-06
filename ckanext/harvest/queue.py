@@ -247,7 +247,7 @@ class RedisConsumer(object):
     def persistance_key(self, message):
         # If you change this, make sure to update the script in `queue_purge`
         message = json.loads(message)
-        return self.routing_key + ':' + message[self.message_key]
+        return str(self.routing_key) + ':' + str(message[self.message_key])
 
     def basic_ack(self, message):
         self.redis.delete(self.persistance_key(message))
