@@ -310,6 +310,7 @@ class Harvest(p.SingletonPlugin, DefaultDatasetForm, DefaultTranslation):
                 'harvesters_info': harvest_helpers.harvesters_info,
                 'harvester_types': harvest_helpers.harvester_types,
                 'harvest_frequencies': harvest_helpers.harvest_frequencies,
+                'harvest_day_of_week': harvest_helpers.harvest_day_of_week,
                 'harvest_times': harvest_helpers.harvest_times,
                 'harvest_default_time': harvest_helpers.harvest_default_time,
                 'link_for_harvest_object': harvest_helpers.link_for_harvest_object,
@@ -389,7 +390,7 @@ def _create_harvest_source_object(context, data_dict):
     source.type = data_dict['source_type']
 
     opt = ['active', 'title', 'description', 'user_id',
-           'publisher_id', 'config', 'frequency', 'time']
+           'publisher_id', 'config', 'frequency', 'day_of_week', 'time']
     for o in opt:
         if o in data_dict and data_dict[o] is not None:
             source.__setattr__(o, data_dict[o])
