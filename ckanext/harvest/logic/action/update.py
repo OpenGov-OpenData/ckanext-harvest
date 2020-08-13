@@ -25,7 +25,7 @@ from ckanext.harvest.plugin import DATASET_TYPE_NAME
 from ckanext.harvest.queue import (
     get_gather_publisher, resubmit_jobs, resubmit_objects)
 
-from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestObject
+from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestObject, DAYS_OF_WEEK, UPDATE_FREQUENCIES
 from ckanext.harvest.logic import HarvestJobExists
 from ckanext.harvest.logic.dictization import harvest_job_dictize
 
@@ -448,34 +448,58 @@ def harvest_objects_import(context, data_dict):
     return last_objects_count
 
 
-def _calculate_next_run(frequency, time):
+def _calculate_next_run(frequency, time, day_of_week=None, start_date=None):
+    def correct_date_due_to_day_of_the_week(date, day_of_week):
+        final_date_day_of_week = date.weekday()
+        day_of_week_int = DAYS_OF_WEEK.index(day_of_week)
 
-    now = datetime.datetime.utcnow()
+        if day_of_week_int < final_date_day_of_week:
+            days_diff = abs(final_date_day_of_week - (day_of_week_int + 7))
+        else:
+            days_diff = abs(final_date_day_of_week - day_of_week_int)
+
+        if days_diff <= 3:
+            while date.weekday() != day_of_week_int:
+                date = date + datetime.timedelta(days=1)
+        else:
+            while date.weekday() != day_of_week_int:
+                date = date - datetime.timedelta(days=1)
+        return date
+
+    if frequency not in UPDATE_FREQUENCIES:
+        raise Exception('Frequency {freq} not recognised'.format(freq=frequency))
+
+    if start_date is None:
+        start_date = datetime.datetime.utcnow()
+
     if time and frequency != 'ALWAYS':
         t = datetime.datetime.strptime(time, '%I:%M %p')
         set_hour = int(t.strftime("%H"))
-        now = now.replace(hour=set_hour, minute=0, second=0, microsecond=0)
+        start_date = start_date.replace(hour=set_hour, minute=0, second=0, microsecond=0)
 
+    final_date = start_date
     if frequency == 'ALWAYS':
-        return now
+        pass
     if frequency == 'WEEKLY':
-        return now + datetime.timedelta(weeks=1)
+        final_date = start_date + datetime.timedelta(weeks=1)
     if frequency == 'BIWEEKLY':
-        return now + datetime.timedelta(weeks=2)
+        final_date = start_date + datetime.timedelta(weeks=2)
     if frequency == 'DAILY':
-        return now + datetime.timedelta(days=1)
+        final_date = start_date + datetime.timedelta(days=1)
     if frequency == 'MONTHLY':
-        if now.month in (4, 6, 9, 11):
+        if start_date.month in (4, 6, 9, 11):
             days = 30
-        elif now.month == 2:
-            if now.year % 4 == 0:
+        elif start_date.month == 2:
+            if start_date.year % 4 == 0:
                 days = 29
             else:
                 days = 28
         else:
             days = 31
-        return now + datetime.timedelta(days=days)
-    raise Exception('Frequency {freq} not recognised'.format(freq=frequency))
+        final_date = start_date + datetime.timedelta(days=days)
+    if frequency not in ["DAILY", "ALWAYS"]:
+        final_date = correct_date_due_to_day_of_the_week(final_date, day_of_week)
+    return final_date
 
 
 def _make_scheduled_jobs(context, data_dict):
@@ -491,7 +515,7 @@ def _make_scheduled_jobs(context, data_dict):
         except HarvestJobExists:
             log.info('Trying to rerun job for %s skipping', source.id)
 
-        source.next_run = _calculate_next_run(source.frequency, source.time)
+        source.next_run = _calculate_next_run(source.frequency, source.time, source.day_of_week)
         source.save()
 
 

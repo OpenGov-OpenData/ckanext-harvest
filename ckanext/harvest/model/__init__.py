@@ -20,6 +20,7 @@ from ckan.model.package import Package
 
 UPDATE_FREQUENCIES = ['MANUAL', 'MONTHLY', 'WEEKLY', 'BIWEEKLY', 'DAILY', 'ALWAYS']
 UPDATE_TIMES = [datetime.time(i).strftime('%I:%M %p') for i in range(24)]
+DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 log = logging.getLogger(__name__)
 
@@ -248,6 +249,7 @@ def define_harvester_tables():
         Column('user_id', types.UnicodeText, default=u''),
         Column('publisher_id', types.UnicodeText, default=u''),
         Column('frequency', types.UnicodeText, default=u'MANUAL'),
+        Column('day_of_week', types.UnicodeText, default=u'Monday'),
         Column('time', types.UnicodeText, default=u''),
         Column('next_run', types.DateTime),
     )
