@@ -42,7 +42,6 @@ Example:
         {% endif %}
       </p>
     {% else %}
-      <span>{{ _('Last Harvest Job')}}</span>
       {% snippet 'snippets/harvest_source_job_details.html', job=job, source=source %}
     {% endif %}
 

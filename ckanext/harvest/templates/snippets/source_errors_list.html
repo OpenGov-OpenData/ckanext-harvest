@@ -16,7 +16,7 @@ Example:
 #}
 {% if sources %}
   <ul class="{{ list_class or 'dataset-list unstyled list-unstyled' }}">
-      {% set job_reports = h.errors_view(sources) %}
+      {% set job_reports = h.get_errors_reports(sources) %}
 
       {% for job_report in job_reports %}
           {% snippet 'snippets/source_item_errors.html', job_report=job_report %}
