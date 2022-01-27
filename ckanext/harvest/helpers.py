@@ -158,6 +158,24 @@ def bootstrap_version():
             else 'bs3')
 
 
+def facet_remove_field(key, value=None, replace=None):
+    '''
+    A custom remove field function to be used by the Harvest search page to
+    render the remove link for the tag pills.
+    '''
+    if p.toolkit.check_ckan_version(min_version='2.9.0'):
+        search_route = 'harvest.search'
+    else:
+        search_route = 'harvest_search'
+
+    return h.remove_url_param(
+        key,
+        value=value,
+        replace=replace,
+        alternative_url=h.url_for(search_route)
+    )
+
+
 def get_latest_job(harvest_id):
     context = {'model': model, 'session': model.Session, 'user': p.toolkit.c.user or p.toolkit.c.author}
     hs = p.toolkit.get_action('harvest_source_show')(context, {'id': harvest_id})
@@ -172,3 +190,15 @@ def get_job(context, job_id):
     except (p.toolkit.ObjectNotFound, p.toolkit.NotAuthorized):
         return {}
     return job
+
+
+def get_harvest_errors_url(current_url):
+    harvest_error_url = current_url
+    if 'show_errors' not in current_url:
+        if '?' not in current_url:
+            harvest_error_url = h.current_url() + '?show_errors=true'
+        else:
+            harvest_error_url = h.current_url() + '&show_errors=true'
+    else:
+        harvest_error_url = facet_remove_field('show_errors')
+    return harvest_error_url

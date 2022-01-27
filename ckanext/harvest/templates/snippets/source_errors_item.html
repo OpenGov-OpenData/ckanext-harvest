@@ -1,5 +1,5 @@
 {#
-Displays a single harvest source result.
+Displays a single harvest source errors summary.
 
 source         - A source to display.
 item_class     - The class name to use on the list item.
@@ -11,15 +11,17 @@ show_organization - Boolean on whether to show the related organization
 
 Example:
 
-  {% snippet 'snippets/source_item.html', source=sources[0] %}
+  {% snippet 'snippets/source_errors_item.html', source=sources[0] %}
 
 #}
 {% set truncate = truncate or 180 %}
 {% set truncate_title = truncate_title or 80 %}
 {% set title = source.title or source.name %}
 {% set source_type = h.get_pkg_dict_extra(source, 'source_type') %}
-{% set url = h.url_for('harvest_admin', id=source.name) if within_organization else h.url_for('harvest_read', id=source.name) %}
+{% set authorized_user = h.check_access('harvest_source_create') %}
+{% set url = h.url_for('harvest_job_show_last', source=source.name) if authorized_user else h.url_for('harvest_read', id=source.name) %}
 {% set job = h.get_latest_job(source.get('id')) %}
+{% set error_summary = job.get('gather_error_summary', []) + job.get('object_error_summary', []) %}
 
 <li class="{{ item_class or "dataset-item" }}">
   <div class="dataset-content">
@@ -41,8 +43,17 @@ Example:
           &mdash; {{ _('Organization') }}: {{ h.link_to(source.organization.title or source.organization.name, h.url_for('organization_read', id=source.organization.name)) }}
         {% endif %}
       </p>
-    {% else %}
-      {% snippet 'snippets/harvest_source_job_details.html', job=job, source=source %}
+
+    {% elif job.status == 'Finished' %}
+      {% if error_summary|length == 0 %}
+        {% snippet 'snippets/message_table.html', message='No errors for the last harvest job' %}
+      {% else %}
+        {% snippet 'snippets/job_error_summary.html', summary=error_summary %}
+      {% endif %}
+
+    {% elif job.status in ['Pending', 'Running'] %}
+      {% snippet 'snippets/message_table.html', message='Harvest job status: '+job.status %}
+
     {% endif %}
 
   </div>

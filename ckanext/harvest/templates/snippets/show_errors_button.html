@@ -1,0 +1,15 @@
+{% set authorized_user = h.check_access('harvest_source_create') %}
+{% set harvest_error_url = h.get_harvest_errors_url(h.current_url()) %}
+
+{% if 'show_errors=true' in harvest_error_url %}
+  {% set button_title = _('Show Harvest Errors') %}
+{% else %}
+  {% set button_title = _('Hide Harvest Errors') %}
+{% endif %}
+
+{% if authorized_user %}
+  <a href="{{ harvest_error_url }}" class="btn btn-default">
+    {{ button_title }}
+  </a>
+{% endif %}
+
