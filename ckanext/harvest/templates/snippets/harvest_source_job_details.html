@@ -28,27 +28,7 @@
         <col width="15">
         <col width="85">
     </colgroup>
-    <tr>
-        <th>{{ _('Created') }}</th>
-        <td>
-        <span class="automatic-local-datetime"
-              data-datetime="{{ h.render_datetime(job.created, date_format='%Y-%m-%dT%H:%M:%S%z') }}">
-            {{ h.render_datetime(job.created, with_hours=True) }}
-        </span>
-        </td>
-    </tr>
-    {% if job.gather_started %}
-        <tr>
-            <th>{{ _('Started') }}</th>
-            <td>
-            <span class="automatic-local-datetime"
-                  data-datetime="{{ h.render_datetime(job.gather_started, date_format='%Y-%m-%dT%H:%M:%S%z') }}">
-                {{ h.render_datetime(job.gather_started, with_hours=True) }}
-            </span>
-            </td>
-        </tr>
-    {% endif %}
-    {% if job.finished %}
+    {% if job.status == 'Finished' %}
         <tr>
             <th>{{ _('Finished') }}</th>
             <td>
@@ -58,11 +38,30 @@
                 </span>
             </td>
         </tr>
+    {% else %}
+        <tr>
+            <th>{{ _('Created') }}</th>
+            <td>
+            <span class="automatic-local-datetime"
+                  data-datetime="{{ h.render_datetime(job.created, date_format='%Y-%m-%dT%H:%M:%S%z') }}">
+                {{ h.render_datetime(job.created, with_hours=True) }}
+            </span>
+            </td>
+        </tr>
+        <tr>
+            <th>{{ _('Started') }}</th>
+            <td>
+            <span class="automatic-local-datetime"
+                  data-datetime="{{ h.render_datetime(job.gather_started, date_format='%Y-%m-%dT%H:%M:%S%z') }}">
+                {{ h.render_datetime(job.gather_started, with_hours=True) }}
+            </span>
+            </td>
+        </tr>
+        <tr>
+            <th>{{ _('Status') }}</th>
+            <td>{{ _(job.status) }}</td>
+        </tr>
     {% endif %}
-    <tr>
-        <th>{{ _('Status') }}</th>
-        <td>{{ _(job.status) }}</td>
-    </tr>
     <tr>
         <th>{{ _('Organization') }}</th>
         <td>{{ h.link_to(source.organization.title or source.organization.name, h.url_for('organization_read', id=source.organization.name)) }}</td>

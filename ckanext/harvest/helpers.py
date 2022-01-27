@@ -192,21 +192,6 @@ def get_job(context, job_id):
     return job
 
 
-def get_errors_reports(sources):
-    context = {'model': model, 'session': model.Session, 'user': p.toolkit.c.user}
-    job_reports = []
-    for source in sources:
-        last_job = get_latest_job(source.get('id'))
-        try:
-            job = p.toolkit.get_action('harvest_job_show')(context, {'id': last_job.get('id')})
-        except (p.toolkit.ObjectNotFound, p.toolkit.NotAuthorized):
-            job = {}
-        job['source_title'] = source.get('title')
-        job['source_name'] = source.get('name')
-        job_reports.append(job)
-    return job_reports
-
-
 def get_harvest_errors_url(current_url):
     harvest_error_url = current_url
     if 'show_errors' not in current_url:

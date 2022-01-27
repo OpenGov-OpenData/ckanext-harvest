@@ -300,7 +300,6 @@ class Harvest(MixinPlugin, p.SingletonPlugin, DefaultDatasetForm, DefaultTransla
                 'facet_remove_field': harvest_helpers.facet_remove_field,
                 'get_harvest_source': harvest_helpers.get_harvest_source,
                 'get_latest_job': harvest_helpers.get_latest_job,
-                'get_errors_reports': harvest_helpers.get_errors_reports,
                 'get_harvest_errors_url': harvest_helpers.get_harvest_errors_url
                 }
 

@@ -1,5 +1,5 @@
 {#
-Displays a list of harvest sources.
+Displays a list of harvest sources errors.
 
 sources        - A list of harvest sources to display.
 list_class     - The class name for the list item.
@@ -11,15 +11,13 @@ truncate_title - The length to truncate the title to (default: 80).
 
 Example:
 
-  {% snippet 'snippets/sources_list.html', sources=sources %}
+  {% snippet 'snippets/sources_errors_list.html', sources=sources %}
 
 #}
 {% if sources %}
   <ul class="{{ list_class or 'dataset-list unstyled list-unstyled' }}">
-      {% set job_reports = h.get_errors_reports(sources) %}
-
-      {% for job_report in job_reports %}
-          {% snippet 'snippets/source_item_errors.html', job_report=job_report %}
-      {% endfor %}
+    {% for source in sources %}
+      {% snippet 'snippets/source_errors_item.html', source=source, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, within_organization=within_organization %}
+    {% endfor %}
   </ul>
 {% endif %}
