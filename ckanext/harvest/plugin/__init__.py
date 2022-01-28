@@ -107,6 +107,10 @@ class Harvest(MixinPlugin, p.SingletonPlugin, DefaultDatasetForm, DefaultTransla
             fq = u"{0} -dataset_type:harvest".format(search_params.get('fq', ''))
             search_params.update({'fq': fq})
 
+        if '+dataset_type:harvest' in fq and 'show_errors:"true"' in fq:
+            fq = fq.replace('show_errors:"true"', '')
+            search_params.update({'fq': fq})
+
         return search_params
 
     def after_show(self, context, data_dict):
