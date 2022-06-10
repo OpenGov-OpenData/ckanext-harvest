@@ -220,6 +220,16 @@ If you don't specify this setting, the default will be False and there will be n
 This timeout value is compared to the completion time of the last object in the job.
 
 
+Avoid overwriting certain fields (optional)
+===========================================
+
+If you want to skip some fields from being changed because of the harvesting, you can add a list of field that should not be overwritten to ``not_overwrite_fields`` in the ini file.
+This is useful in case you want to add additional fields to the harvested datasets, or if you want to alter them after they have harvested.
+For example, in case you want to retain changes made by the users to the fields ``decription`` and ``tags``:
+
+    ckan.harvest.not_overwrite_fields = description tags
+
+
 Command line interface
 ======================
 
@@ -719,7 +729,7 @@ python environment activated):
 
 ON CKAN >= 2.9::
 
-      (pyenv) $ ckan --config=/etc/ckan/default/ckan.ini harvester gather_consumer
+      (pyenv) $ ckan --config=/etc/ckan/default/ckan.ini harvester gather-consumer
 
 ON CKAN <= 2.8::
 
@@ -729,7 +739,7 @@ On another terminal, run the following command:
 
 ON CKAN >= 2.9::
 
-      (pyenv) $ ckan --config=/etc/ckan/default/ckan.ini harvester fetch_consumer
+      (pyenv) $ ckan --config=/etc/ckan/default/ckan.ini harvester fetch-consumer
 
 ON CKAN <= 2.8::
 
@@ -763,7 +773,7 @@ the harvest source:
 
 ON CKAN >= 2.9::
 
-      (pyenv) $ ckan --config=/etc/ckan/default/ckan.ini harvester job_abort {source-id/name}
+      (pyenv) $ ckan --config=/etc/ckan/default/ckan.ini harvester job-abort {source-id/name}
 
 ON CKAN <= 2.8::
 
@@ -818,7 +828,7 @@ following steps with the one you are using.
 
         [program:ckan_gather_consumer]
 
-        command=/usr/lib/ckan/default/bin/ckan --config=/etc/ckan/default/ckan.ini harvester gather_consumer
+        command=/usr/lib/ckan/default/bin/ckan --config=/etc/ckan/default/ckan.ini harvester gather-consumer
 
         ; user that owns virtual environment.
         user=ckan
@@ -832,7 +842,7 @@ following steps with the one you are using.
 
         [program:ckan_fetch_consumer]
 
-        command=/usr/lib/ckan/default/bin/ckan --config=/etc/ckan/default/ckan.ini harvester fetch_consumer
+        command=/usr/lib/ckan/default/bin/ckan --config=/etc/ckan/default/ckan.ini harvester fetch-consumer
 
         ; user that owns virtual environment.
         user=ckan
@@ -966,7 +976,7 @@ following steps with the one you are using.
    ON CKAN >= 2.9::
 
     # m  h  dom mon dow   command
-      0  5  *   *   *     /usr/lib/ckan/default/bin/ckan -c /etc/ckan/default/ckan.ini harvester clean_harvest_log
+      0  5  *   *   *     /usr/lib/ckan/default/bin/ckan -c /etc/ckan/default/ckan.ini harvester clean-harvest-log
 
    ON CKAN <= 2.8::
 
