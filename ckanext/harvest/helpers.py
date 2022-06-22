@@ -57,7 +57,10 @@ def package_list_for_source(source_id):
 
     query = p.toolkit.get_action('package_search')(context, search_dict)
 
-    base_url = h.url_for('{0}_read'.format(DATASET_TYPE_NAME), id=source_id)
+    base_url = h.url_for(
+        '{0}_read'.format(DATASET_TYPE_NAME),
+        id=harvest_source['name']
+    )
 
     def pager_url(q=None, page=None):
         url = base_url
