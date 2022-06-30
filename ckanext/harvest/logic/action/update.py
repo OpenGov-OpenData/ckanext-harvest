@@ -575,8 +575,7 @@ def _calculate_next_run(frequency, time):
         set_hour = int(t.strftime("%H"))
         now = now.replace(
             hour=set_hour,
-            minute=random.randint(0, 30),
-            second=random.randint(0, 59)
+            minute=random.randint(0, 5)
         )
 
     if frequency == 'ALWAYS':
