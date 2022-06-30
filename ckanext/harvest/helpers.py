@@ -1,6 +1,6 @@
 
 import datetime
-
+from ckan import logic
 from ckan import model
 import ckan.lib.helpers as h
 import ckan.plugins as p
@@ -55,7 +55,7 @@ def package_list_for_source(source_id):
         if (harvest_source and owner_org in user_member_of_orgs):
             context['ignore_capacity_check'] = True
 
-    query = p.toolkit.get_action('package_search')(context, search_dict)
+    query = logic.get_action('package_search')(context, search_dict)
 
     base_url = h.url_for(
         '{0}_read'.format(DATASET_TYPE_NAME),
@@ -94,13 +94,13 @@ def package_count_for_source(source_id):
     fq = '+harvest_source_id:"{0}"'.format(source_id)
     search_dict = {'fq': fq}
     context = {'model': model, 'session': model.Session}
-    result = p.toolkit.get_action('package_search')(context, search_dict)
+    result = logic.get_action('package_search')(context, search_dict)
     return result.get('count', 0)
 
 
 def harvesters_info():
     context = {'model': model, 'user': p.toolkit.c.user or p.toolkit.c.author}
-    return p.toolkit.get_action('harvesters_info_show')(context, {})
+    return logic.get_action('harvesters_info_show')(context, {})
 
 
 def harvester_types():
@@ -132,7 +132,7 @@ def link_for_harvest_object(id=None, guid=None, text=None):
 
     if guid:
         context = {'model': model, 'user': p.toolkit.c.user or p.toolkit.c.author}
-        obj = p.toolkit.get_action('harvest_object_show')(context, {'id': guid, 'attr': 'guid'})
+        obj = logic.get_action('harvest_object_show')(context, {'id': guid, 'attr': 'guid'})
         id = obj.id
 
     url = h.url_for('harvest_object_show', id=id)

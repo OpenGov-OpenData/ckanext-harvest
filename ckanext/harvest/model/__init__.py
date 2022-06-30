@@ -18,7 +18,7 @@ from ckan.model.domain_object import DomainObject
 from ckan.model.package import Package
 
 
-UPDATE_FREQUENCIES = ['MANUAL', 'MONTHLY', 'WEEKLY', 'BIWEEKLY', 'DAILY', 'ALWAYS']
+UPDATE_FREQUENCIES = ['MANUAL', 'MONTHLY', 'BIWEEKLY', 'WEEKLY', 'DAILY', 'ALWAYS']
 UPDATE_TIMES = [datetime.time(i).strftime('%I:%M %p') for i in range(24)]
 
 log = logging.getLogger(__name__)

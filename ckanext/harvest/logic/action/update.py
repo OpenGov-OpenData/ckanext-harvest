@@ -6,6 +6,7 @@ import six
 
 import logging
 import datetime
+import random
 
 from ckantoolkit import config
 from sqlalchemy import and_, or_
@@ -572,7 +573,10 @@ def _calculate_next_run(frequency, time):
     if time and frequency != 'ALWAYS':
         t = datetime.datetime.strptime(time, '%I:%M %p')
         set_hour = int(t.strftime("%H"))
-        now = now.replace(hour=set_hour, minute=0, second=0, microsecond=0)
+        now = now.replace(
+            hour=set_hour,
+            minute=random.randint(0, 5)
+        )
 
     if frequency == 'ALWAYS':
         return now
