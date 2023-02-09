@@ -13,5 +13,6 @@ development.ini
 node_modules
 *.project
 .eggs
-.vscode/
 .idea/
+.vscode/
+
