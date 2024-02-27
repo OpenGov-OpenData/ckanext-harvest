@@ -73,6 +73,17 @@ def get_connection_redis():
             encoding='utf-8',
         )
     else:
+        if config.get('ckan.harvest.mq.enable_ssl', False):
+            return redis.Redis(
+                host=config.get('ckan.harvest.mq.hostname', HOSTNAME),
+                port=int(config.get('ckan.harvest.mq.port', REDIS_PORT)),
+                password=config.get('ckan.harvest.mq.password', None),
+                db=int(config.get('ckan.harvest.mq.redis_db', REDIS_DB)),
+                decode_responses=True,
+                encoding='utf-8',
+                ssl=True,
+                ssl_cert_reqs='none',
+            )
         return redis.Redis(
             host=config.get('ckan.harvest.mq.hostname', HOSTNAME),
             port=int(config.get('ckan.harvest.mq.port', REDIS_PORT)),
