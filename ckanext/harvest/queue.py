@@ -8,7 +8,7 @@ import pika
 import sqlalchemy
 
 from ckan.lib.base import config
-from ckan.plugins import PluginImplementations
+from ckan.plugins import PluginImplementations, toolkit
 from ckan import model
 
 from ckanext.harvest.model import HarvestJob, HarvestObject, HarvestGatherError
@@ -73,7 +73,7 @@ def get_connection_redis():
             encoding='utf-8',
         )
     else:
-        if config.get('ckan.harvest.mq.enable_ssl', False):
+        if toolkit.asbool(config.get('ckan.harvest.mq.enable_ssl', False)):
             return redis.Redis(
                 host=config.get('ckan.harvest.mq.hostname', HOSTNAME),
                 port=int(config.get('ckan.harvest.mq.port', REDIS_PORT)),
