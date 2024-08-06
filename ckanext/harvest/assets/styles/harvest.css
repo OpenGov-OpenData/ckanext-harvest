@@ -13,6 +13,7 @@ header.with-filter h1 {
 }
 [data-diff="error"] {
   background-color: #b55457;
+  color: #ffffff;
 }
 [data-diff="added"] {
   background-color: #9ee592;
