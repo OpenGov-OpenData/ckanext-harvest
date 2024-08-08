@@ -4,7 +4,7 @@
     <p>
         <span class="label label-important" data-diff="error">
             {% if 'errored' in stats and stats['errored'] > 0 %}
-                {{ h.link_to("{} {}".format(stats['errored'], _('errors')), h.url_for('harvest_job_show', source=source.get('id'), id=job['id'])) }}
+                {{ h.link_to("{} {}".format(stats['errored'], _('errors')), h.url_for('harvester.job_show', source=source.get('id'), id=job['id'])) }}
             {% else %}
                 0 {{ _('errors') }}
             {% endif %}
