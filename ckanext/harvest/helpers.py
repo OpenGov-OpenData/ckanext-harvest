@@ -110,7 +110,6 @@ def harvester_types():
 
 
 def harvest_frequencies():
-
     return [{'text': p.toolkit._(f.title()), 'value': f}
             for f in UPDATE_FREQUENCIES]
 
@@ -171,18 +170,21 @@ def facet_remove_field(key, value=None, replace=None):
 
 def get_latest_job(harvest_id):
     context = {'model': model, 'session': model.Session, 'user': p.toolkit.c.user or p.toolkit.c.author}
-    hs = p.toolkit.get_action('harvest_source_show')(context, {'id': harvest_id})
-    last_job = hs.get('status', {}).get('last_job', {})
-    job = get_job(context, last_job.get('id')) if last_job else {}
-    return job
+    try:
+        harvest_source = p.toolkit.get_action('harvest_source_show')(context, {'id': harvest_id})
+        last_job = harvest_source.get('status', {}).get('last_job', {})
+        job = get_job(context, last_job.get('id')) if last_job else {}
+        return job
+    except (p.toolkit.ObjectNotFound, p.toolkit.NotAuthorized):
+        return {}
 
 
 def get_job(context, job_id):
     try:
         job = p.toolkit.get_action('harvest_job_show')(context, {'id': job_id})
+        return job
     except (p.toolkit.ObjectNotFound, p.toolkit.NotAuthorized):
         return {}
-    return job
 
 
 def get_harvest_errors_url(current_url):
