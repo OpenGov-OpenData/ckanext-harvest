@@ -23,7 +23,7 @@ Example:
   {% for error in summary %}
     <tr>
       <td class="count">{{ error["error_count"] }}</td>
-      <td>{{ error["message"] }}</td>
+      <td><pre style="padding:0">{{ error["message"] }}</pre></td>
     </tr>
   {% endfor %}
    </tbody>
